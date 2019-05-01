@@ -4,6 +4,8 @@
 ## Description: Functionality of package, including methods.
 ##################################################
 
+library(ggplot2)
+
 
 #' @title Number of successes
 #' @description Calculates the number of combinations in which k successes occur in n trials
@@ -17,21 +19,27 @@
 #' bin_choose(5, 1:3)
 bin_choose <- function(n, k){
   
-  if (k > n){
+  if (length(k[k <= n]) != length(k)){
     stop("k cannot be greater than n")
   }
-  if (n < 0 || k < 0){
+  
+  if (n < 0 || length(k[k < 0]) != 0){
     stop("neither k nor n can be negative values")
   }
   
-  #n choose k, avoid loops, can't use choose()
   numerator <- factorial(n)
+  denom <- rep(0, length(k))
   denom <- factorial(k) * factorial((n - k))
+  combos <- rep(0, length(k))
   combos <- numerator / denom
   
   return(combos)
   
 }
+
+
+
+
 
 
 
@@ -42,20 +50,7 @@ bin_choose <- function(n, k){
 #' @export
 #' @examples
 bin_probability <- function(success, trials, prob){
-  
-  # probability of getting 2 successes in 5 trials 
-  # (assuming prob of success = 0.5) 
-  #bin_probability(success = 2, trials = 5, prob = 0.5)
-  ## [1] 0.3125
-  # probabilities of getting 2 or less successes in 5 trials 
-  # (assuming prob of success = 0.5) 
-  #bin_probability(success = 0:2, trials = 5, prob = 0.5)
-  ## [1] 0.03125 0.15625 0.31250
-  # 55 heads in 100 tosses of a loaded coin with 45% chance of heads 
-  # bin_probability(success = 55, trials = 100, prob = 0.45) 
-  ## [1] 0.01075277
-  
-  
+ 
   #checks
   if (!check_trials(trials)){
     stop("invalid trials value")
@@ -70,10 +65,16 @@ bin_probability <- function(success, trials, prob){
   p_fail <- (1 - prob) ^ (trials - success)
   p_success <- prob ^ success
   combo <- bin_choose(trials, success)
+  probability <- rep(0, length(combo))
   probability <- combo * p_success * p_fail
   return(probability)
   
 }
+
+
+
+
+
 
 #' @title
 #' @description 
@@ -83,9 +84,27 @@ bin_probability <- function(success, trials, prob){
 #' @examples
 bin_distribution <- function(trials, prob){
 
-  
-  
+p <- rep(0, trials + 1)
+p <- bin_probability(0:trials, trials, prob)
+
+success <- 0:trials
+
+df <- data.frame(
+      success = success,
+      probability = p
+)
+
+class(df) = c("bindis", "data.frame")
+
+return(df)
+
 }
+
+
+
+
+
+
 
 #' @title
 #' @description 
@@ -95,7 +114,17 @@ bin_distribution <- function(trials, prob){
 #' @examples
 bin_cumulative <- function(trials, prob){
   
+  dist <- bin_distribution(trials, prob)
+  cumlv <- rep(0, length(dist$probability))
   
+  df <- data.frame(
+    success = dist$success,
+    probability = dist$probability,
+    cumlv = cumsum(dist$probability)
+    
+  )
+  class(df) <- c("bincum", "data.frame")
+  return(df)
   
 }
 
@@ -153,3 +182,33 @@ check_success <- function(success, trials) {
   }
   
 }
+
+###########  Methods  #######################
+
+#' @export
+
+plot.bindis <- function(x,...){
+  
+  ggplot2::ggplot(x) +
+    ggplot2::aes(x = success, y = probability) +
+    ggplot2::geom_bar(stat = "identity", fill = "steelblue") + 
+    ggplot2::xlab("Successes") + 
+    ggplot2::ylab("Probability")    
+  
+}
+
+#' @export
+plot.bincum <- function(x, ...){
+  
+  ggplot2::ggplot(x) +
+    ggplot2::aes(x = success, y = cumlv) +
+    ggplot2::geom_path(linejoin = "mitre", lineend = "round", colour = 'steelblue', size = 3) +
+  ggplot2::xlab("Successes") +
+  ggplot2::ylab("Probability") +
+    ggplot2::theme_minimal()
+  
+}
+
+
+
+
