@@ -5,6 +5,10 @@
 ##################################################
 
 library(ggplot2)
+library(stringr)
+
+
+######### Main Functions ##################################3
 
 
 #' @title Number of successes
@@ -128,7 +132,40 @@ bin_cumulative <- function(trials, prob){
   
 }
 
-#Auxillary check functions:
+
+
+#' @title
+#' @description 
+#' @param 
+#' @return 
+#' @export
+#' @examples
+bin_variable <- function(trials, prob){
+
+  check_trials(trials)
+  check_prob(prob)
+  
+  binvar <- list(
+    trials <- trials,
+    prob <- prob
+  )
+  
+  class(binvar) <- "binvar"
+  return(binvar)
+
+}
+
+
+
+
+
+
+
+
+
+
+############## Auxillary check functions #########################
+
 #Description: Tests if input prob is a valid probability value and returns either true or false.
 check_prob <- function(prob){
   
@@ -183,6 +220,12 @@ check_success <- function(success, trials) {
   
 }
 
+
+
+
+
+
+
 ###########  Methods  #######################
 
 #' @export
@@ -198,7 +241,7 @@ plot.bindis <- function(x,...){
 }
 
 #' @export
-plot.bincum <- function(x, ...){
+plot.bincum <- function(x,...){
   
   ggplot2::ggplot(x) +
     ggplot2::aes(x = success, y = cumlv) +
@@ -209,6 +252,29 @@ plot.bincum <- function(x, ...){
   
 }
 
+#' @export
+print.binvar <- function(x,...){
+  
+  print(" \"Binomial variable\" ", quote = FALSE)
+  writeLines(" \nParameters")
+  line1 <- paste("- number of trials:", x[[1]], sep = " ")
+  line2 <- paste("- prob of success :", x[[2]], sep = " ")
+  print(line1)
+  print(line2)
+  
+}
 
+#' @export
+summary.binvar <- function(x,...){
+  
+  
+  
+}
 
+#' @export
+print.summary.binvar <- function(x,...){
+  
+  
+  
+}
 
