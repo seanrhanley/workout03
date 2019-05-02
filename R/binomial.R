@@ -47,10 +47,12 @@ bin_choose <- function(n, k){
 
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
+#' @title bin_probability
+#' @description finds probable number of successes
+#' @param success numeric number of successes
+#' @param trials number of trials
+#' @param prob probability as number between 0 and 1
+#' @return probability as a numeric value
 #' @export
 #' @examples
 bin_probability <- function(success, trials, prob){
@@ -80,11 +82,12 @@ bin_probability <- function(success, trials, prob){
 
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
-#' @export
+#' @title bin_distribution
+#' @description finds the probability distribution
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return data.frame as class 'bindis'
+#' @export 
 #' @examples
 bin_distribution <- function(trials, prob){
 
@@ -110,10 +113,11 @@ return(df)
 
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
+#' @title bin_cumulative
+#' @description finds the cumulative probability that sums to 1
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return data.frame as class 'bincum'
 #' @export
 #' @examples
 bin_cumulative <- function(trials, prob){
@@ -134,10 +138,11 @@ bin_cumulative <- function(trials, prob){
 
 
 
-#' @title
+#' @title bin_variable
 #' @description 
-#' @param 
-#' @return 
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return object of class 'binvar'
 #' @export
 #' @examples
 bin_variable <- function(trials, prob){
@@ -156,10 +161,11 @@ bin_variable <- function(trials, prob){
 }
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
+#' @title bin_mean
+#' @description calculate the mean of binomial distribution(np)
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return mean as numeric value
 #' @export
 #' @examples
 bin_mean <- function(trials, prob){
@@ -171,10 +177,11 @@ bin_mean <- function(trials, prob){
 }
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
+#' @title bin_variance
+#' @description calculate variance of binomial dist. (np(1-p))
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return variance as numeric value
 #' @export
 #' @examples
 bin_variance <- function(trials, prob){
@@ -194,10 +201,11 @@ bin_variance <- function(trials, prob){
 
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
+#' @title bin_mode
+#' @description calculate the most likely number of successes in n independent trials. (the floor of np + p)
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return return mode as numeric value
 #' @export
 #' @examples
 bin_mode <- function(trials, prob){
@@ -216,10 +224,11 @@ bin_mode <- function(trials, prob){
 
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
+#' @title bin_skewness
+#' @description calculate asymmetry of the probability dist. of a random variable about its mean.
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return skewness as numeric value
 #' @export
 #' @examples
 bin_skewness <- function(trials, prob){
@@ -237,10 +246,11 @@ bin_skewness <- function(trials, prob){
 
 
 
-#' @title
-#' @description 
-#' @param 
-#' @return 
+#' @title bin_kurtosis
+#' @description calculate measure of "tailedness" of probability dist. of a random variable
+#' @param trials as number of trials
+#' @param prob as probability number between 0 and 1
+#' @return kurtosis as numeric value
 #' @export
 #' @examples
 bin_kurtosis <- function(trials, prob){
@@ -312,6 +322,7 @@ check_success <- function(success, trials) {
   }
   
 }
+
 
 
 
@@ -399,6 +410,7 @@ print.summary.binvar <- function(x,...){
   
   
 }
+
 
 
 ################## Private Auxillary Functions ######################################################
