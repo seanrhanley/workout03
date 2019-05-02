@@ -6,7 +6,7 @@
 
 library(ggplot2)
 library(stringr)
-
+library(testthat)
 
 ######### Main Functions ##################################3
 
