@@ -156,12 +156,105 @@ bin_variable <- function(trials, prob){
 }
 
 
+#' @title
+#' @description 
+#' @param 
+#' @return 
+#' @export
+#' @examples
+bin_mean <- function(trials, prob){
+  
+  check_trials(trials)
+  check_prob(prob)
+  return(trials * prob)
+  
+}
+
+
+#' @title
+#' @description 
+#' @param 
+#' @return 
+#' @export
+#' @examples
+bin_variance <- function(trials, prob){
+  
+  check_trials(trials)
+  check_prob(prob)
+  
+  n <- trials
+  p <- prob
+  
+  mean <- aux_mean(trials, prob)
+  var <- mean * (1 - p)
+  
+  return(var)
+  
+}
 
 
 
+#' @title
+#' @description 
+#' @param 
+#' @return 
+#' @export
+#' @examples
+bin_mode <- function(trials, prob){
+  
+  check_trials(trials)
+  check_prob(prob)
+  
+  n <- trials
+  p <- prob
+  mean <- n * p
+  m = floor(mean + p)
+  
+  return(m)
+  
+}
 
 
 
+#' @title
+#' @description 
+#' @param 
+#' @return 
+#' @export
+#' @examples
+bin_skewness <- function(trials, prob){
+  
+  check_trials(trials)
+  check_prob(prob)
+  
+  mean <- aux_mean(trials, prob)
+  var <- aux_variance(trials, prob)
+  sd <- sqrt(var)
+  skew <- (1 - 2 * prob) / sd
+  return(skew)
+  
+}
+
+
+
+#' @title
+#' @description 
+#' @param 
+#' @return 
+#' @export
+#' @examples
+bin_kurtosis <- function(trials, prob){
+  
+  check_trials(trials)
+  check_prob(prob)
+  
+  var <- aux_variance(trials, prob)
+  num <- 1 - ((6 * prob) * (1 - prob))
+  kurt <- num / var
+  
+  return(kurt)
+  
+}
 
 
 ############## Auxillary check functions #########################
@@ -226,6 +319,7 @@ check_success <- function(success, trials) {
 
 
 
+
 ###########  Methods  #######################
 
 #' @export
@@ -267,14 +361,96 @@ print.binvar <- function(x,...){
 #' @export
 summary.binvar <- function(x,...){
   
+  bin <- list(
+    trials = x[[1]],
+    prob = x[[2]],
+    mean = aux_mean(x[[1]], x[[2]]),
+    variance = aux_variance(x[[1]], x[[2]]),
+    mode = aux_mode(x[[1]], x[[2]]),
+    skewness = aux_skewness(x[[1]], x[[2]]),
+    kurtosis = aux_kurtosis(x[[1]], x[[2]])
+  )
   
+  class(bin) <- "summary.binvar"
+  return(bin)
   
 }
 
 #' @export
 print.summary.binvar <- function(x,...){
   
+  print(" \"Summary Binomial\" ", quote = FALSE)
+  writeLines(" \nParameters")
+  line1 <- paste("- number of trials:", x[[1]], sep = " ")
+  line2 <- paste("- prob of success :", x[[2]], sep = " ")
+  print(line1)
+  print(line2)
+  writeLines(" \nMeasures")
+  line_mean <- paste("- mean:", x[[3]], sep = " ")
+  line_var <- paste("- variance:", x[[4]], sep = " ")
+  line_mode <- paste("- mode:", x[[5]], sep = " ")
+  line_skew <- paste("- skewness:", x[[6]], sep = " ")
+  line_kurt <- paste("- kurtosis:", x[[7]], sep = " ")
+  print(line_mean)
+  print(line_var)
+  print(line_mode)
+  print(line_skew)
+  print(line_kurt)
   
+  
+}
+
+
+################## Private Auxillary Functions ######################################################
+
+#calculate the mean of binomial distribution(np)
+aux_mean <- function(trials, prob){
+  return(trials * prob)
+}
+
+#calculate variance of binomial dist. (np(1-p))
+aux_variance <- function(trials, prob){
+  
+  n <- trials
+  p <- prob
+  
+  mean <- aux_mean(trials, prob)
+  var <- mean * (1 - p)
+  
+  return(var)
+  
+}
+
+#calculate the most likely number of successes in n independent trials. (the floor of np + p)
+aux_mode <- function(trials, prob){
+  
+  n <- trials
+  p <- prob
+  mean <- n * p
+  m = floor(mean + p)
+  
+  return(m)
+}
+
+#calculate asymmetry of the probability dist. of a random variable about its mean.
+aux_skewness <- function(trials, prob){
+  
+  mean <- aux_mean(trials, prob)
+  var <- aux_variance(trials, prob)
+  sd <- sqrt(var)
+  skew <- (1 - 2 * prob) / sd
+  return(skew)
+  
+}
+
+#calculate measure of "tailedness" of probability dist. of a random variable
+aux_kurtosis <- function(trials, prob){
+  
+  var <- aux_variance(trials, prob)
+  num <- 1 - ((6 * prob) * (1 - prob))
+  kurt <- num / var
+  
+  return(kurt)
   
 }
 
